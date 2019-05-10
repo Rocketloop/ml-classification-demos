@@ -288,8 +288,8 @@ class ClassificationReport:
 
 
 def main():
-    files = ["./repo/data_files/adult.data.1-16th.txt", \
-        "./repo/data_files/test2.csv"]
+    files = ["./data_files/adult.data.txt", \
+        "./data_files/adult.test.txt"]
     names = ["age","workclass","fnlwgt","education","education-num",
                 "marital-status","occupation","relationship","race","sex",
                 "capital-gain","capital-loss","hours-per-week","native-country",
@@ -299,35 +299,8 @@ def main():
     data = Data(files, names, categorical_features, "income")
     debug = False
     if debug:
-        # nn0 = data.get_neural_network((2,2))
-        # nn1 = data.get_neural_network((4,4))
-        # nn2 = data.get_neural_network((5,5))
-        # nn3 = data.get_neural_network((8,8))
-        # nn4 = data.get_neural_network((10,10,10))
-        # nn5 = data.get_neural_network((15,15,15))
-        # nn6 = data.get_neural_network((20,20,20))
-        # nn7 = data.get_neural_network((25,25,25))
-        nn8 = data.get_neural_network((20,20,20,20,20,20,20,20,20,),5000)
-        clfs = []
-        # clfs.append(nn0)
-        # clfs.append(nn1)
-        # clfs.append(nn2)
-        # clfs.append(nn3)
-        # clfs.append(nn4)
-        # clfs.append(nn5)
-        # clfs.append(nn6)
-        # clfs.append(nn7)
-        clfs.append(nn8)
-
-        classification_reports = []
-        for i in range(len(clfs)):
-            classification_reports.append(data.get_classification_report(clfs[i], data.x_test, data.y_test, label=str(i)))
-            print(str(i) + "\n", clfs[i].score(data.x_test, data.y_test), clfs[i].n_iter_)
-            classification_reports.append(data.get_classification_report(clfs[i], data.x_train, data.y_train, label=str(i)))
-            print(str(i) + "\n", clfs[i].score(data.x_train, data.y_train), clfs[i].n_iter_)
-        print(classification_reports)
-        Plotting.plot_roc_curve(Plotting, classification_reports)
-
+        """ If you want to debug something do it here. """
+        pass
     else:
         log_time = time.time()
         log = data.get_log_regr()
@@ -377,5 +350,6 @@ def main():
         # plt.savefig("/Users/tobiasmarzell/Desktop/rocketloop/" + \
         #      "classifier-experiment/chart4.png", dpi = 700)
         # print("done")
+
 if __name__ == "__main__":
     main()
