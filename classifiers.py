@@ -1,5 +1,6 @@
 import pandas as pd
 import sys
+import time
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -28,39 +29,39 @@ class Plotting:
         self.data = data
 
     def get_categorical_chart(self, data):
-        """ Returns the categorical plot.
+        """ Return the categorical plot.
 
         Takes data object as argument. """
-        fig, ax = plt.subplots(nrows = 2, ncols = 2) # structure of the plot
+        fig, ax = plt.subplots(nrows=2, ncols=2) # structure of the plot
         for i, categorical_feature in enumerate(data["workclass","education","race","sex"]):
             achse = data[categorical_feature].value_counts()
-            achse = achse.plot("bar", ax=ax[int(i / 2), (i % 2)], color = self.color1)
+            achse = achse.plot("bar", ax=ax[int(i / 2), (i % 2)], color=self.color1)
             achse.set_title(categorical_feature)
         fig.tight_layout()
         return fig
 
     def get_pie_chart(self, data):
-        """ Returns the pie plot.
+        """ Return the pie plot.
 
         Takes data object as argument. """
         fig, ax = plt.subplots(1,1)
-        data[data.target].value_counts().plot("pie", ax, colors = [self.color2, self.color1])
+        data[data.target].value_counts().plot("pie", ax, colors=[self.color2, self.color1])
         return fig
 
     def plot_roc_curve(self, classification_reports):
-        """ Plots the as an array given classification reports roc curves. """
+        """ Plot the as an array given classification reports roc curves. """
         #create the plots
         if len(classification_reports) > 2:
-            fig, ax = plt.subplots(ncols = 2, nrows = int(len(classification_reports)/2) + len(classification_reports) % 2)
+            fig, ax = plt.subplots(ncols=2, nrows=int(len(classification_reports)/2) + len(classification_reports) % 2)
             #removes last ax if uneven:
             if (len(classification_reports) % 2) == 1:
                 fig.delaxes(ax[int(len(ax) - 1), 1])
             for i in range(len(classification_reports)):
                 ax[int(i/2), i%2].plot(classification_reports[i].fpr, classification_reports[i].tpr, \
-                    label='%s (area = %0.2f)' % (classification_reports[i].label, classification_reports[i].logit_roc_auc),\
-                        color = Plotting.color2)
+                    label='%s (area = %0.2f)' % (classification_reports[i].label, classification_reports[i].roc_auc),\
+                        color=Plotting.color2)
                 # plots the f(x) = x line:
-                ax[int(i/2), i%2].plot([0, 1], [0, 1], color = Plotting.color1)
+                ax[int(i/2), i%2].plot([0, 1], [0, 1], color=Plotting.color1)
                 ax[int(i/2), i%2].set_xlim([0.0, 1.0])
                 ax[int(i/2), i%2].set_ylim([0.0, 1.0])
                 ax[int(i/2), i%2].set_title(classification_reports[i].label)
@@ -69,13 +70,13 @@ class Plotting:
                 ax[int(i/2), i%2].legend(loc="lower right")
 
         elif len(classification_reports) == 2:
-            fig, ax = plt.subplots(ncols = 2, nrows = 1)
+            fig, ax = plt.subplots(ncols=2, nrows=1)
             for i in range(len(classification_reports)):
                 ax[i].plot(classification_reports[i].fpr, classification_reports[i].tpr, \
-                    label='%s (area = %0.2f)' % (classification_reports[i].label, classification_reports[i].logit_roc_auc),\
-                        color = Plotting.color2)
+                    label='%s (area = %0.2f)' % (classification_reports[i].label, classification_reports[i].roc_auc),\
+                        color=Plotting.color2)
                 # plots the f(x) = x line:
-                ax[i].plot([0, 1], [0, 1], color = Plotting.color1)
+                ax[i].plot([0, 1], [0, 1], color=Plotting.color1)
                 ax[i].set_xlim([0.0, 1.0])
                 ax[i].set_ylim([0.0, 1.0])
                 ax[i].set_title(classification_reports[i].label)
@@ -84,12 +85,12 @@ class Plotting:
                 ax[i].legend(loc="lower right")
 
         elif len(classification_reports) == 1:
-            fig, ax = plt.subplots(ncols = 1, nrows = 1)
+            fig, ax = plt.subplots(ncols=1, nrows=1)
             ax.plot(classification_reports[0].fpr, classification_reports[0].tpr, \
-                    label='%s (area = %0.2f)' % (classification_reports[0].label, classification_reports[0].logit_roc_auc),\
-                        color = Plotting.color2)
+                    label='%s (area = %0.2f)' % (classification_reports[0].label, classification_reports[0].roc_auc),\
+                        color=Plotting.color2)
                 # plots the f(x) = x line:
-            ax.plot([0, 1], [0, 1], color = Plotting.color1)
+            ax.plot([0, 1], [0, 1], color=Plotting.color1)
             ax.set_xlim([0.0, 1.0])
             ax.set_ylim([0.0, 1.0])
             ax.set_title(classification_reports[0].label)
@@ -122,13 +123,13 @@ class Data:
     The following Methods can be used to generate classifier objects of the Data object,
     which can get used for predicting scores and plotting performances and so on.
     They always use the Data object which contains the data they get trained on. \n
-    do_log_regr(self): returns a logistical regression classifier object of the Data.
-    do_gradient_boosting_trees(self): create a gradient boosting trees classifier object of the Data.
-    do_decission_tree(self): returns a decission tree classifier object of the Data.
-    do_neural_network(self): returns a neural network classifier object of the Data.
-    do_svm(self): returns a support vector machine classifier object of the Data.
-    do_kneighbors(self): returns a k-nearest neighbor classifier object of the Data.
-    do_naive_bayes(self): returns a naive bayes classifier object of the Data.
+    get_log_regr(self): returns a logistical regression classifier object of the Data.
+    get_gradient_boosted_trees(self): create a gradient boosted trees classifier object of the Data.
+    get_decision_tree(self): returns a decision tree classifier object of the Data.
+    get_neural_network(self): returns a neural network classifier object of the Data.
+    get_svm(self): returns a support vector machine classifier object of the Data.
+    get_kneighbors(self): returns a k-nearest neighbor classifier object of the Data.
+    get_naive_bayes(self): returns a naive bayes classifier object of the Data.
     """
 
     def __init__(self, files, names, categorical_features, target, sep = ","):
@@ -142,8 +143,8 @@ class Data:
         # This data will be used to analyse the dataset (add variability maybe).
         self.names = names
 
-        self.learndata = pd.read_csv((files[0]), names = self.names, sep=sep)
-        self.testdata = pd.read_csv((files[1]), names = self.names, sep=sep)
+        self.traindata = pd.read_csv((files[0]), names=self.names, sep=sep)
+        self.testdata = pd.read_csv((files[1]), names=self.names, sep=sep)
 
         self.categorical_features = categorical_features
 
@@ -152,139 +153,111 @@ class Data:
         self.setup_data()
 
     def setup_data(self):
-        """ Sets up the data so it can be classified. """
-        # removes any incomplete data
-        learndata = self.remove_incomplete_data(self.learndata)
+        """ set up the data for classification """
+        traindata = self.remove_incomplete_data(self.traindata)
         testdata = self.remove_incomplete_data(self.testdata)
         
-        #split feature and target data
-        self.y_train = self.set_target(learndata)
+        self.y_train = self.set_target(traindata)
         self.y_test = self.set_target(testdata)
 
-        traindata = learndata.drop(self.target, axis = 1)
-        testdata = testdata.drop(self.target, axis = 1)
-        temp = len(traindata)
-        learndata = traindata.append(testdata, ignore_index = True)
-        learndata = self.get_dummies(learndata, self.categorical_features)
-        self.x_train = learndata[0:temp]
-        self.x_test = learndata[temp:len(learndata)]
+        # set dummies of combined train and test data with removed target variable
+        fulldata = self.get_dummies(traindata.append(testdata, ignore_index=True).drop(self.target, axis=1).drop("fnlwgt", axis=1), self.categorical_features)
+        self.x_train = fulldata[0:len(traindata)]
+        self.x_test = fulldata[len(traindata):len(fulldata)]
 
     def get_categorical_features(self):
-        """ Returns the categorical features of the data as array. """
+        """ Return the categorical features of the data as array. """
         return self.categorical_features
 
     def remove_incomplete_data(self, data):
-        """ Removes every row of the data that contains atleast 1 "?". """
-        data = data.replace("?", np.nan)
-        return data.dropna(0, "any")
+        """ Remove every row of the data that contains atleast 1 "?". """
+        return data.replace("?", np.nan).dropna(0, "any")
 
     def get_dummies(self, data, categorical_features):
-        """ Gets the dummies of the categorical features for the given data. """
+        """ Get the dummies of the categorical features for the given data. """
         for feature in self.categorical_features:
-            try:
-                data[feature] = data[feature].str.replace(" ","")
-            except(AttributeError):
-                pass
-            cat_list = pd.get_dummies(data[feature], prefix=feature, drop_first=True)
-            data = data.join(cat_list)
-        
-        # add non categorical features to the data
-        data_vars = data.columns.values.tolist()
-        to_keep = []
-        for i in data_vars:
-            if i not in categorical_features:
-                to_keep.append(i)
-        data = data[to_keep]
+            # create dummyvariable with pd.get_dummies and drop all categorical variables with dataframe.drop
+            data = data.join(pd.get_dummies(data[feature], prefix=feature, drop_first=True)).drop(feature, axis=1)
         return data
 
     def set_target(self, data):
-        """ Cleans the data by setting targets (0,1 for either case) """
-        temp = (data[self.target].unique()) # returns all the unique target values.
-        for i in range(len(temp)):
-            data[self.target] = np.where(data[self.target] == temp[i], i, data[self.target])
+        """ Set the target values of the target variables (0,1 for either case). """
+        for i in range(len(data[self.target].unique())):
+            data[self.target] = np.where(data[self.target] == data[self.target].unique()[i], i, data[self.target])
         return data[self.target].astype("int")
 
-    def do_log_regr(self):
-        """ Returns a logistic regression classifier object. """
-        clf = LogisticRegression(solver = "lbfgs")
-        clf.fit(self.x_train, self.y_train)
-        return clf
+    def get_log_regr(self):
+        """ Return a logistic regression classifier object. """
+        clf = LogisticRegression(solver="lbfgs")
+        return clf.fit(self.x_train, self.y_train)
     
-    def do_gradient_boosting_trees(self):
-        """ Returns a gradient boosting trees classifier object. """
+    def get_gradient_boosted_trees(self):
+        """ Return a gradient boosted trees classifier object. """
         clf = GradientBoostingClassifier(n_estimators=4000, learning_rate=0.04, max_depth=2, random_state=0)
-        clf.fit(self.x_train, self.y_train)
-        return clf
+        return clf.fit(self.x_train, self.y_train)
 
-    def do_decission_tree(self):
-        """ Returns a decission tree classifier object. """
+    def get_decision_tree(self):
+        """ Return a decision tree classifier object. """
         clf = tree.DecisionTreeClassifier()
-        clf.fit(self.x_train, self.y_train)
-        return clf
+        return clf.fit(self.x_train, self.y_train)
     
-    def do_neural_network(self, hidden_layer_size = (100,), max_iter = 200):
-        """ Returns a nn classifier object. 
+    def get_neural_network(self, hidden_layer_size=(100,), max_iter=200):
+        """ Return a nn classifier object. 
         
         Optional arguments:\n 
         hidden_layer_size: Tuple of ints that defines the size and the amount of hidden layers. (default (100,))) 
         max_iter: Int that defines the maximum amount of training iterations. (default 200) """
         clf = MLPClassifier(hidden_layer_sizes=hidden_layer_size,\
-             max_iter=max_iter)
-        clf.fit(self.x_train, self.y_train)
-        return clf
+             max_iter=max_iter, tol=0.000001, n_iter_no_change=250, early_stopping=False, verbose=False,
+              learning_rate="adaptive", validation_fraction=0)
+        return clf.fit(self.x_train, self.y_train)
 
-    def do_svm(self):
-        """  Returns an svm classifier object.  """        
+    def get_svm(self):
+        """  Return an svm classifier object.  """        
         clf = SVC(gamma="auto")
-        clf.fit(self.x_train, self.y_train)
-        return clf
+        return clf.fit(self.x_train, self.y_train)
 
-    def do_kneighbors(self):
-        """ Returns a k-nn object. """
+    def get_kneighbors(self):
+        """ Return a k-nn object. """
         clf = KNeighborsClassifier(n_neighbors=5)
-        clf.fit(self.x_train, self.y_train)
-        return clf
+        return clf.fit(self.x_train, self.y_train)
 
-    def do_naive_bayes(self):
-        """ Returns a native bayes classifier object. """
+    def get_naive_bayes(self):
+        """ Return a native bayes classifier object. """
         clf = GaussianNB()
-        clf.fit(self.x_train, self.y_train)
-        return clf
+        return clf.fit(self.x_train, self.y_train)
 
-    def do_gaussian_process_regressor(self):
-        """ Returns a gaussian process regressor classifier object. """
+    def get_gaussian_process_regressor(self):
+        """ Return a gaussian process regressor classifier object. """
         clf = GaussianProcessRegressor()
-        clf.fit(self.x_train, self.y_train)
-        return clf
+        return clf.fit(self.x_train, self.y_train)
     
-    def do_dummy_classifier(self):
-        """ Returns a dummy classifier object. """
+    def get_dummy_classifier(self):
+        """ Return a dummy classifier object. """
         clf = DummyClassifier()
-        clf.fit(self.x_train, self.y_train)
-        return clf
+        return clf.fit(self.x_train, self.y_train)
 
-    def get_classificaction_report(self, clf, x, y, label = ""):
-        """ Returns a ClassificationReport object. 
+    def get_classification_report(self, clf, x, y, label=""):
+        """ Return a ClassificationReport object. 
 
-        Arguments:\n
-        clf: The classifier to be reported.\n
-        x: The feature values.\n
-        y: The target values to validate the predictions. \n
+        Arguments:
+        clf: The classifier to be reported.
+        x: The feature values.
+        y: The target values to validate the predictions.
         label: (optionally) sets a label."""
-        logit_roc_auc = roc_auc_score(y, clf.predict_proba(x)[:,1])
+
+        roc_auc = roc_auc_score(y, clf.predict_proba(x)[:,1])
         fpr, tpr, thresholds = roc_curve(y, clf.predict_proba(x)[:,1])
-        predictions = clf.predict(x)
-        classification_report = ClassificationReport(metrics.confusion_matrix(y, predictions),\
-        metrics.classification_report(y, predictions), logit_roc_auc, fpr, tpr, thresholds , label)
-        return classification_report
+        return ClassificationReport(metrics.confusion_matrix(y, clf.predict(x)), 
+        metrics.classification_report(y, clf.predict(x)), roc_auc, fpr, tpr, thresholds , label)
 
 class ClassificationReport:
     """ Object to Print the classification report data. """
-    def __init__(self, matrix, report, logit_roc_auc, fpr, tpr, thresholds, label):
+    def __init__(self, matrix, report, roc_auc, fpr, tpr, thresholds, label):
         """ Takes sklearn matrix and report as arguments. """
         self.matrix = matrix
         self.report = report
-        self.logit_roc_auc = logit_roc_auc
+        self.roc_auc = roc_auc
         self.fpr = fpr
         self.tpr = tpr
         self.thresholds = thresholds
@@ -294,58 +267,115 @@ class ClassificationReport:
             self.label = label
         
     def __repr__(self):
-        """ Object gets represented as a string containing its information. """
-        x = "\tt\t" + "f\n" + "n\t" + str(self.matrix[0][0]) + "\t" + str(self.matrix[0][1]) + "\n" + "p\t" + str(self.matrix[1][1]) + "\t" + str(self.matrix[1][0])
+        """ Represent object as string containing its information. """
+        x = "\tt\t" + "f\n" + "n\t" + str(self.matrix[0][0]) + "\t" + str(self.matrix[0][1]) + \
+            "\n" + "p\t" + str(self.matrix[1][1]) + "\t" + str(self.matrix[1][0])
         x += ("\n" + self.report)
         return x
 
-    def write_to_file(self, file, args = []):
-        """ Writes a ClassificationReport object to a file. 
+    def write_to_file(self, file, additional = []):
+        """ Write a ClassificationReport object to a file. 
 
         Arguments:
         file: The file to write to.
-        args: (optional) to display additional information at the beginning. """
-        if args == []:
+        additional: (optional) to display additional information at the beginning. """
+        if additional == []:
             with open(file, "a") as file:
                 file.write(self.__repr__())
         else:
             with open(file, "a") as file:
-                file.write(str(args) + "\n" + self.__repr__())
+                file.write(str(additional) + "\n" + self.__repr__())
 
 
 def main():
-    files = ["./data_files/adult.data.txt", \
-        "./data_files/adult.test.txt"]
-    names = ["age","workclass","fnlwgt","education","education-num",\
-                "marital-status","occupation","relationship","race","sex",\
-                "capital-gain","capital-loss","hours-per-week","native-country",\
+    files = ["./repo/data_files/train2.csv", \
+        "./repo/data_files/test2.csv"]
+    names = ["age","workclass","fnlwgt","education","education-num",
+                "marital-status","occupation","relationship","race","sex",
+                "capital-gain","capital-loss","hours-per-week","native-country",
                 "income"]
-    categorical_features = ["workclass","education","race","sex","marital-status","occupation","relationship",\
+    categorical_features = ["workclass","education","race","sex","marital-status","occupation","relationship",
             "native-country"]
     data = Data(files, names, categorical_features, "income")
+    debug = False
+    if debug:
+        # nn0 = data.get_neural_network((2,2))
+        # nn1 = data.get_neural_network((4,4))
+        # nn2 = data.get_neural_network((5,5))
+        # nn3 = data.get_neural_network((8,8))
+        # nn4 = data.get_neural_network((10,10,10))
+        # nn5 = data.get_neural_network((15,15,15))
+        # nn6 = data.get_neural_network((20,20,20))
+        # nn7 = data.get_neural_network((25,25,25))
+        nn8 = data.get_neural_network((20,20,20,20,20,20,20,20,20,),5000)
+        clfs = []
+        # clfs.append(nn0)
+        # clfs.append(nn1)
+        # clfs.append(nn2)
+        # clfs.append(nn3)
+        # clfs.append(nn4)
+        # clfs.append(nn5)
+        # clfs.append(nn6)
+        # clfs.append(nn7)
+        clfs.append(nn8)
 
-    log = data.do_log_regr()
-    dec_tree = data.do_decission_tree()
-    svm = data.do_svm()
-    gbt = data.do_gradient_boosting_trees()
-    knn = data.do_kneighbors()
-    naive_bayes = data.do_naive_bayes()
-    nn = data.do_neural_network((100,100))
-    classification_reports = []
-    classification_reports.append(data.get_classificaction_report(log, data.x_test, data.y_test, label = "log"))    
-    classification_reports.append(data.get_classificaction_report(dec_tree, data.x_test, data.y_test, label = "dec_tree"))
-    classification_reports.append(data.get_classificaction_report(svm, data.x_test, data.y_test, label = "svm"))
-    classification_reports.append(data.get_classificaction_report(gbt, data.x_test, data.y_test, label = "gbt"))    
-    classification_reports.append(data.get_classificaction_report(knn, data.x_test, data.y_test, label = "k-nearestneighbors"))
-    classification_reports.append(data.get_classificaction_report(naive_bayes, data.x_test, data.y_test, label = "naivebayes"))
-    classification_reports.append(data.get_classificaction_report(nn, data.x_test, data.y_test, label = "nn"))
-    print("log \n", log.score(data.x_test, data.y_test))
-    print("decision tree\n", dec_tree.score(data.x_test, data.y_test))
-    print("gradient boosting\n" , gbt.score(data.x_test, data.y_test), "\n", gbtscore.logit_roc_auc, "\n", gbtscore)
-    print("knn\n", knn.score(data.x_test, data.y_test))
-    print("naive bayes\n", naive_bayes.score(data.x_test, data.y_test))
-    print("nn\n", nn.score(data.x_test, data.y_test))
-    print("svm\n", svm.score(data.x_test, data.y_test))
+        classification_reports = []
+        for i in range(len(clfs)):
+            classification_reports.append(data.get_classification_report(clfs[i], data.x_test, data.y_test, label=str(i)))
+            print(str(i) + "\n", clfs[i].score(data.x_test, data.y_test), clfs[i].n_iter_)
+            classification_reports.append(data.get_classification_report(clfs[i], data.x_train, data.y_train, label=str(i)))
+            print(str(i) + "\n", clfs[i].score(data.x_train, data.y_train), clfs[i].n_iter_)
+        print(classification_reports)
+        Plotting.plot_roc_curve(Plotting, classification_reports)
 
+    else:
+        log_time = time.time()
+        log = data.get_log_regr()
+        log_time = time.time() - log_time
+        dec_tree_time = time.time()
+        dec_tree = data.get_decision_tree()
+        dec_tree_time = time.time() - dec_tree_time
+        # svm = data.get_svm()
+        gbt_time = time.time()
+        gbt = data.get_gradient_boosted_trees()
+        gbt_time = time.time() - gbt_time
+        knn_time = time.time()
+        knn = data.get_kneighbors()
+        knn_time = time.time() - knn_time
+        naive_bayes_time = time.time()
+        naive_bayes = data.get_naive_bayes()
+        naive_bayes_time = time.time() - naive_bayes_time
+        nn_time = time.time()
+        nn = data.get_neural_network((20,20,20,20,20,20,20,20,20,),5000)
+        nn_time = time.time() - nn_time
+        # dummy = data.get_dummy_classifier()
+        classification_reports = []
+        classification_reports.append(data.get_classification_report(log, data.x_test, data.y_test, label = "Logistische Regression"))
+        classification_reports.append(data.get_classification_report(dec_tree, data.x_test, data.y_test, label="Decision Tree"))
+        # classification_reports.append(data.get_classification_report(svm, data.x_test, data.y_test, label = "svm"))
+        classification_reports.append(data.get_classification_report(gbt, data.x_test, data.y_test, label = "Gradient Boosted Trees"))
+        classification_reports.append(data.get_classification_report(knn, data.x_test, data.y_test, label="k-nearest Neighbors"))
+        classification_reports.append(data.get_classification_report(naive_bayes, data.x_test, data.y_test, label="Naive Bayes"))
+        classification_reports.append(data.get_classification_report(nn, data.x_test, data.y_test, label = "Neuronales Netz"))
+        # classification_reports.append(data.get_classification_report(dummy, data.x_test, data.y_test, label = "dummy"))
+        Plotting.plot_roc_curve(Plotting, classification_reports)
+        print("log \n", log.score(data.x_test, data.y_test), log_time, "\n", classification_reports[0])
+        print("decision tree\n", dec_tree.score(data.x_test, data.y_test), dec_tree_time, "\n", classification_reports[1])
+        print("gradient boosted tree\n" , gbt.score(data.x_test, data.y_test), gbt_time, "\n", classification_reports[2])
+        print("knn\n", knn.score(data.x_test, data.y_test), knn_time, "\n", classification_reports[3])
+        print("naive bayes\n", naive_bayes.score(data.x_test, data.y_test), naive_bayes_time, "\n", classification_reports[4])
+        print("nn\n", nn.score(data.x_test, data.y_test), nn_time, "\n", classification_reports[5])
+        # print("svm\n", svm.score(data.x_test, data.y_test))
+        # print("dummy\n", dummy.score(data.x_test, data.y_test))
+
+        # only for chart print
+        #
+        # chart1 = get_chart1(testdata)
+        # plt.savefig("/Users/tobiasmarzell/Desktop/rocketloop/" + \
+        #      "classifier-experiment/chart3.png", dpi = 400)
+        # chart2 = get_chart2(testdata)
+        # plt.savefig("/Users/tobiasmarzell/Desktop/rocketloop/" + \
+        #      "classifier-experiment/chart4.png", dpi = 700)
+        # print("done")
 if __name__ == "__main__":
     main()
