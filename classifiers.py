@@ -21,7 +21,7 @@ from sklearn.metrics import roc_curve
 
 __author__ = "Tobias Marzell"
 __credits__ = "Thanks to the creators of pandas, numpy, matplotlib and scikit-learn, aswell as to the UCI machine learning repository and to the creators of the data set."
- __email__ = "tobias.marzell@gmail.com"
+__email__ = "tobias.marzell@gmail.com"
 
 class Plotting:
     """ Contains the stuff for plotting. """
