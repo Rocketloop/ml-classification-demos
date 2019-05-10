@@ -1,10 +1,9 @@
 import pandas as pd
-import numpy as nu
-import random
+
 def main():
-    file = open("./data_files/train.csv", "r")
-    filee = open("train.csv", "w", newline = '')
-    fileee = open("test.csv", "w", newline = '')
+    file = open("./data_files/adult.data.txt", "r")
+    filee = open("adult.data.1-4th.txt", "w", newline = '')
+    fileee = open("adult.test.1-4th.txt", "w", newline = '')
     data = pd.read_csv(file, sep=",")
     data = data.sample(frac=1).reset_index(drop=True)
     test = data[0:int(len(data)/4)]
