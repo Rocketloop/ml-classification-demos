@@ -3,6 +3,7 @@ import sys
 import time
 import numpy as np
 import matplotlib
+matplotlib.use('TkAgg') #for mac support
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from sklearn.linear_model import LogisticRegression
