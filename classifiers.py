@@ -97,16 +97,16 @@ class Plotting:
             ax.set_ylabel('True Positive Rate')
             ax.set_xlabel('False Positive Rate')
             ax.legend(loc="lower right")
-        
+
         plt.suptitle('Receiver operating characteristic')
         plt.tight_layout()
         plt.show()
         return
 
 class Data:
-    """ This class handles everthing related to the data analysis. 
-    
-    The Data object holds the train- and testdatasets as well as the column names and the names of the 
+    """ This class handles everthing related to the data analysis.
+
+    The Data object holds the train- and testdatasets as well as the column names and the names of the
     categorical features which are required for categorical classification.\n
     It contains the following object variables:
     names: list of strings containing the labels of the columns
@@ -133,7 +133,7 @@ class Data:
     """
 
     def __init__(self, files, names, categorical_features, target, sep = ","):
-        """ Takes files, names and categorical_features as an array of strings as an input. 
+        """ Takes files, names and categorical_features as an array of strings as an input.
 
         The files have to be entered in a list as following: 1. item is the traindata, 2. item is the testdata.
         (optionally 3. item but this is only important if you want to safe the classification report.)
@@ -149,14 +149,14 @@ class Data:
         self.categorical_features = categorical_features
 
         self.target = target
-        
+
         self.setup_data()
 
     def setup_data(self):
         """ set up the data for classification """
         traindata = self.remove_incomplete_data(self.traindata)
         testdata = self.remove_incomplete_data(self.testdata)
-        
+
         self.y_train = self.set_target(traindata)
         self.y_test = self.set_target(testdata)
 
@@ -190,7 +190,7 @@ class Data:
         """ Return a logistic regression classifier object. """
         clf = LogisticRegression(solver="lbfgs")
         return clf.fit(self.x_train, self.y_train)
-    
+
     def get_gradient_boosted_trees(self):
         """ Return a gradient boosted trees classifier object. """
         clf = GradientBoostingClassifier(n_estimators=4000, learning_rate=0.04, max_depth=2, random_state=0)
@@ -200,12 +200,12 @@ class Data:
         """ Return a decision tree classifier object. """
         clf = tree.DecisionTreeClassifier()
         return clf.fit(self.x_train, self.y_train)
-    
+
     def get_neural_network(self, hidden_layer_size=(100,), max_iter=200):
-        """ Return a nn classifier object. 
-        
-        Optional arguments:\n 
-        hidden_layer_size: Tuple of ints that defines the size and the amount of hidden layers. (default (100,))) 
+        """ Return a nn classifier object.
+
+        Optional arguments:\n
+        hidden_layer_size: Tuple of ints that defines the size and the amount of hidden layers. (default (100,)))
         max_iter: Int that defines the maximum amount of training iterations. (default 200) """
         clf = MLPClassifier(hidden_layer_sizes=hidden_layer_size,\
              max_iter=max_iter, tol=0.000001, n_iter_no_change=250, early_stopping=False, verbose=False,
@@ -213,7 +213,7 @@ class Data:
         return clf.fit(self.x_train, self.y_train)
 
     def get_svm(self):
-        """  Return an svm classifier object.  """        
+        """  Return an svm classifier object.  """
         clf = SVC(gamma="auto")
         return clf.fit(self.x_train, self.y_train)
 
@@ -231,14 +231,14 @@ class Data:
         """ Return a gaussian process regressor classifier object. """
         clf = GaussianProcessRegressor()
         return clf.fit(self.x_train, self.y_train)
-    
+
     def get_dummy_classifier(self):
         """ Return a dummy classifier object. """
         clf = DummyClassifier()
         return clf.fit(self.x_train, self.y_train)
 
     def get_classification_report(self, clf, x, y, label=""):
-        """ Return a ClassificationReport object. 
+        """ Return a ClassificationReport object.
 
         Arguments:
         clf: The classifier to be reported.
@@ -248,7 +248,7 @@ class Data:
 
         roc_auc = roc_auc_score(y, clf.predict_proba(x)[:,1])
         fpr, tpr, thresholds = roc_curve(y, clf.predict_proba(x)[:,1])
-        return ClassificationReport(metrics.confusion_matrix(y, clf.predict(x)), 
+        return ClassificationReport(metrics.confusion_matrix(y, clf.predict(x)),
         metrics.classification_report(y, clf.predict(x)), roc_auc, fpr, tpr, thresholds , label)
 
 class ClassificationReport:
@@ -265,7 +265,7 @@ class ClassificationReport:
             self.label = None
         else:
             self.label = label
-        
+
     def __repr__(self):
         """ Represent object as string containing its information. """
         x = "\tt\t" + "f\n" + "n\t" + str(self.matrix[0][0]) + "\t" + str(self.matrix[0][1]) + \
@@ -274,7 +274,7 @@ class ClassificationReport:
         return x
 
     def write_to_file(self, file, additional = []):
-        """ Write a ClassificationReport object to a file. 
+        """ Write a ClassificationReport object to a file.
 
         Arguments:
         file: The file to write to.
