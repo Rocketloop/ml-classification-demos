@@ -288,7 +288,7 @@ class ClassificationReport:
 
 
 def main():
-    files = ["./repo/data_files/train2.csv", \
+    files = ["./repo/data_files/adult.data.1-16th.txt", \
         "./repo/data_files/test2.csv"]
     names = ["age","workclass","fnlwgt","education","education-num",
                 "marital-status","occupation","relationship","race","sex",
