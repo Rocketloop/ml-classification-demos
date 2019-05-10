@@ -19,6 +19,10 @@ from sklearn.preprocessing import label_binarize
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 
+__author__ = "Tobias Marzell"
+__credits__ = "Thanks to the creators of pandas, numpy, matplotlib and scikit-learn, aswell as to the UCI machine learning repository and to the creators of the data set."
+ __email__ = "tobias.marzell@gmail.com"
+
 class Plotting:
     """ Contains the stuff for plotting. """
 
