@@ -12,7 +12,7 @@ For any changes of the data set used for training or testing of the models you h
 To do so use an editor of your choice and navigate to the main function and edit the values for 'files'. The first file is the train data and the second file is the test data.
 When you want to leave the virtual environment simply type `deactivate`.
 
-If you speak german we highly recommending reading our blog. You will find helpful information and insights about what the script does and how it works. Simply hit the following link: https://rocketloop.de/machine-learning-klassifizierung-in-python-teil-1/
+If you speak german we highly recommend reading our blog. You will find helpful information and insights about what the script does and how it works. Simply hit the following link: https://rocketloop.de/machine-learning-klassifizierung-in-python-teil-1/
 
 ## Using datasplitter.py for creating sub data sets
 We included reduced data sets in the `data_files` folder to compare training times. The files were created using the `datasplitter.py`, a small script which splits a dataset into a 1/4 train set and 3/4 test set. It may be a bit buggy so verify the outcome manually if you want to use it. Usage: Change the value for `file` to the file you want to split. Change the value for `filee` to the file you want to store the train data in. Change the value for `fileee` to the file you want to store the test data in.   
