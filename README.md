@@ -9,7 +9,7 @@ The next step will be to start the virtual environment with `source venv/bin/act
 Once you are in the virtual environment enter `pip install -r requirements.txt` to install the required packages.
 After the install you are good to run `python3 classifiers.py`.
 For any changes of the data set used for training or testing of the models you have to manually change the code.
-To do so use an editor of your choice and navigate to the main function and edit the values for 'files'. The first file is the train data and the second file is the test data.
+To do so use an editor of your choice and navigate to the main function and edit the values for 'files'. The first file is the train data and the second file is the test data. You will also need to change the names to match with your dataset. After changing the names you will have to declare what the categorical features are and you will need to change your target value when creating the data object.
 When you want to leave the virtual environment simply type `deactivate`.
 
 If you speak german we highly recommend reading our blog. You will find helpful information and insights about what the script does and how it works. Simply hit the following link: https://rocketloop.de/machine-learning-klassifizierung-in-python-teil-1/
